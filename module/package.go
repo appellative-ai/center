@@ -9,9 +9,9 @@ package module
 
 // Notification - message, advice, put and get, trace only put
 //
-// Path : /notification/message?n=core:resiliency:agent/traffic/http/limiter#1.2.3
-//        /notification/advice/join?n=core:resiliency:agent/traffic/http/limiter
-//        /notification/trace/join?n=core:resiliency:agent/traffic/http/limiter
+// Path : /notification/message
+//        /notification/advice
+//        /notification/trace
 
 // Namespace - thing and join, get and put
 //
@@ -20,5 +20,5 @@ package module
 
 // Namespace - retrieval and request, post over the namespace
 //
-// Path : /namespace/retrieval?n=core:resiliency:agent/traffic/http/limiter#1.2.3
-//        /namespace/request?n=core:resiliency:agent/traffic/http/limiter
+// Path : /namespace/retrieval
+//        /namespace/request
