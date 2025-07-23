@@ -13,12 +13,10 @@ package module
 //        /notification/advice
 //        /notification/trace
 
-// Namespace - thing and join, get and put
+// Namespace - retrieval and request, post over the namespace. Retrieval needs to support a simple get with
+//             query args
 //
-// Path : /namespace/thing?n=core:resiliency:agent/traffic/http/limiter#1.2.3
-//        /namespace/join?n=core:resiliency:agent/traffic/http/limiter
-
-// Namespace - retrieval and request, post over the namespace
-//
-// Path : /namespace/retrieval
-//        /namespace/request
+// Path : GET  /namespace/retrieval
+//        POST /namespace/retrieval
+//        POST /namespace/request
+//        POST /namespace/connect

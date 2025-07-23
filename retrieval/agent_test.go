@@ -1,9 +1,9 @@
-package namespace
+package retrieval
 
 import "fmt"
 
 func ExampleNewAgent() {
-	a := newAgent()
+	a := newAgent(nil)
 
 	fmt.Printf("test: newAgent() -> [%v]\n", a)
 

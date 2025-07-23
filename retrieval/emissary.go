@@ -1,4 +1,4 @@
-package namespace
+package retrieval
 
 import (
 	"github.com/appellative-ai/core/messaging"
