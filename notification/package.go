@@ -2,6 +2,6 @@ package notification
 
 // Notification - message, advice, put and get, trace only put
 //
-// Path : /notification/message
-//        /notification/advice
-//        /notification/trace
+// Path : GET,PUT /notification/message
+//        GET,PUT /notification/advice
+//        PUT /notification/trace
