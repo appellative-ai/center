@@ -33,7 +33,7 @@ func init() {
 func newAgent() *agentT {
 	a := new(agentT)
 	a.agents = messaging.NewExchange()
-	//a.agents.Register(resource.NewAgent())
+	//a.agents.Register(resolution.NewAgent())
 	//a.agents.Register(namespace.NewAgent())
 	agent = a
 
