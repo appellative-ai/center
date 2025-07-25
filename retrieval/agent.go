@@ -1,7 +1,10 @@
 package retrieval
 
 import (
+	"bytes"
+	"errors"
 	"fmt"
+	"github.com/appellative-ai/center/expansion"
 	"github.com/appellative-ai/core/httpx"
 	"github.com/appellative-ai/core/messaging"
 	"github.com/appellative-ai/core/rest"
@@ -24,7 +27,7 @@ var (
 )
 
 func NewAgent() messaging.Agent {
-	agent = newAgent(retrieval.Relation)
+	agent = newAgent(retrieval.Retriever, expansion.Expander)
 	return agent
 }
 
@@ -35,16 +38,18 @@ type agentT struct {
 	ticker   *messaging.Ticker
 	emissary *messaging.Channel
 
-	relation *retrieval.Resolution
+	retriever *retrieval.Interface
+	expander  *expansion.Interface
 }
 
-func newAgent(relation *retrieval.Resolution) *agentT {
+func newAgent(retriever *retrieval.Interface, expander *expansion.Interface) *agentT {
 	a := new(agentT)
 	a.timeout = timeout
 	a.ticker = messaging.NewTicker(messaging.ChannelEmissary, duration)
 	a.emissary = messaging.NewEmissaryChannel()
-	a.relation = relation
 
+	a.retriever = retriever
+	a.expander = expander
 	return a
 }
 
@@ -103,10 +108,19 @@ func (a *agentT) Link(next rest.Exchange) rest.Exchange {
 	return func(req *http.Request) (resp *http.Response, err error) {
 		ctx, cancel := httpx.NewContext(nil, a.timeout)
 		defer cancel()
+		var buf bytes.Buffer
 
-		buf, err1 := a.relation.Marshal(ctx, thingQueryName, "select * from thing", nil)
-		if err1 != nil {
-			return httpx.NewResponse(messaging.StatusExecError, nil, err1), err1
+		switch req.Method {
+		case http.MethodGet:
+
+			buf, err = get(a, ctx, req)
+		case http.MethodPost:
+			buf, err = post(a, ctx, req)
+		default:
+			return httpx.NewResponse(http.StatusMethodNotAllowed, nil, nil), errors.New("method not allowed")
+		}
+		if err != nil {
+			return httpx.NewResponse(http.StatusInternalServerError, nil, nil), err
 		}
 		return httpx.NewResponse(http.StatusOK, nil, buf), nil
 	}
