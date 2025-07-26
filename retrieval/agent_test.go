@@ -3,7 +3,7 @@ package retrieval
 import "fmt"
 
 func ExampleNewAgent() {
-	a := newAgent(nil)
+	a := newAgent(nil, nil)
 
 	fmt.Printf("test: newAgent() -> [%v]\n", a)
 

@@ -22,13 +22,8 @@ const (
 	joinQueryName  = "common:core:query/namespace/join"
 )
 
-var (
-	agent *agentT
-)
-
 func NewAgent() messaging.Agent {
-	agent = newAgent(retrieval.Retriever, expansion.Expander)
-	return agent
+	return newAgent(retrieval.Retriever, expansion.Expander)
 }
 
 type agentT struct {
@@ -113,9 +108,9 @@ func (a *agentT) Link(next rest.Exchange) rest.Exchange {
 		switch req.Method {
 		case http.MethodGet:
 
-			buf, err = get(a, ctx, req)
+			buf, err = a.get(ctx, req)
 		case http.MethodPost:
-			buf, err = post(a, ctx, req)
+			buf, err = a.post(ctx, req)
 		default:
 			return httpx.NewResponse(http.StatusMethodNotAllowed, nil, nil), errors.New("method not allowed")
 		}

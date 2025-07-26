@@ -6,11 +6,11 @@ import (
 	"net/http"
 )
 
-func post(agent *agentT, ctx context.Context, req *http.Request) (bytes.Buffer, error) {
+func (a *agentT) post(ctx context.Context, req *http.Request) (bytes.Buffer, error) {
 	var buf bytes.Buffer
-	sql, args, err1 := agent.expander.Params("", req.URL.Query())
+	sql, args, err1 := a.expander.Params("", req.URL.Query())
 	if err1 != nil {
 		return buf, err1
 	}
-	return agent.retriever.Marshal(ctx, "", sql, args)
+	return a.retriever.Marshal(ctx, "", sql, args)
 }
