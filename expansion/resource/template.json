@@ -1,0 +1,22 @@
+[
+  {
+    "name":"CALL dbo.QueryNamespace($1,$2,$3)",
+    "args":{
+      "count": {
+        "Nullable":false,
+        "type":"int",
+        "sql-type":""
+      },
+      "createDate":{
+        "Nullable":false,
+        "type":"string",
+        "sql-type":"DateTime"
+      },
+      "name":{
+        "Nullable":true,
+        "type":"string",
+        "sql-type":""
+      }
+    }
+  }
+]
