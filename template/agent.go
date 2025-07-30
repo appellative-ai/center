@@ -1,26 +1,32 @@
-package retrieval
+package template
 
 import (
-	"bytes"
 	"errors"
 	"fmt"
-	"github.com/appellative-ai/center/template"
-	"github.com/appellative-ai/core/httpx"
 	"github.com/appellative-ai/core/messaging"
-	"github.com/appellative-ai/core/rest"
-	"github.com/appellative-ai/postgres/retrieval"
+	"github.com/appellative-ai/postgres/resolution"
 	"net/http"
 	"time"
 )
 
 const (
-	NamespaceName = "common:core:agent/namespace/center"
+	NamespaceName = "common:core:agent/namespace/templatecenter"
 	duration      = time.Second * 30
 	timeout       = time.Second * 4
+
+	defaultGetName = "common:core:retrieval/query"
+)
+
+// TODO: need to integrate a retrieval that has an implied name, getDefaultName, as the GET arguments
+//       are in the query string, not the request body
+
+var (
+	agent *agentT
 )
 
 func NewAgent() messaging.Agent {
-	return newAgent(retrieval.Retriever, template.Processor)
+	agent = newAgent(resolution.Resolver)
+	return agent
 }
 
 type agentT struct {
@@ -30,18 +36,16 @@ type agentT struct {
 	ticker   *messaging.Ticker
 	emissary *messaging.Channel
 
-	retriever *retrieval.Interface
-	processor *template.Interface
+	resolver *resolution.Interface
 }
 
-func newAgent(retriever *retrieval.Interface, processor *template.Interface) *agentT {
+func newAgent(resolver *resolution.Interface) *agentT {
 	a := new(agentT)
 	a.timeout = timeout
 	a.ticker = messaging.NewTicker(messaging.ChannelEmissary, duration)
 	a.emissary = messaging.NewEmissaryChannel()
 
-	a.retriever = retriever
-	a.processor = processor
+	a.resolver = resolver
 	return a
 }
 
@@ -61,7 +65,7 @@ func (a *agentT) Message(m *messaging.Message) {
 		if a.running {
 			return
 		}
-		messaging.UpdateContent[time.Duration](&a.timeout, m)
+		//messaging.UpdateContent[time.Duration](&a.timeout, m)
 		return
 	case messaging.StartupEvent:
 		if a.running {
@@ -95,25 +99,10 @@ func (a *agentT) emissaryFinalize() {
 	a.ticker.Stop()
 }
 
-// Link - chainable exchange
-func (a *agentT) Link(next rest.Exchange) rest.Exchange {
-	return func(req *http.Request) (resp *http.Response, err error) {
-		ctx, cancel := httpx.NewContext(nil, a.timeout)
-		defer cancel()
-		var buf bytes.Buffer
-
-		switch req.Method {
-		case http.MethodGet:
-
-			buf, err = a.get(ctx, req)
-		case http.MethodPost:
-			buf, err = a.post(ctx, req)
-		default:
-			return httpx.NewResponse(http.StatusMethodNotAllowed, nil, nil), errors.New("method not allowed")
-		}
-		if err != nil {
-			return httpx.NewResponse(http.StatusInternalServerError, nil, nil), err
-		}
-		return httpx.NewResponse(http.StatusOK, nil, buf), nil
+func (a *agentT) expand(r *http.Request) (Response, error) {
+	if r == nil {
+		return Response{}, errors.New("http Request is nil")
 	}
+
+	return Response{}, nil
 }
