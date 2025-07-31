@@ -8,7 +8,7 @@ import (
 
 func (a *agentT) get(ctx context.Context, r *http.Request) (bytes.Buffer, error) {
 	var buf bytes.Buffer
-	resp, err := a.expand(r)
+	resp, err := expand(r)
 	if err != nil {
 		return buf, err
 	}

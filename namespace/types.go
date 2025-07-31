@@ -5,12 +5,6 @@ type arg struct {
 	Value any    `json:"value"`
 }
 
-type response struct {
-	Name string
-	Sql  string
-	Args []any
-}
-
 type tagRelation struct {
 	Name     string `json:"name"`
 	Instance string `json:"instance"`

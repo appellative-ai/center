@@ -128,11 +128,3 @@ func (a *agentT) Link(next rest.Exchange) rest.Exchange {
 		return httpx.NewResponse(http.StatusOK, nil, buf), nil
 	}
 }
-
-func (a *agentT) expand(r *http.Request) (response, error) {
-	if r == nil {
-		return response{}, errors.New("http Request is nil")
-	}
-
-	return response{}, nil
-}
