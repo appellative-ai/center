@@ -3,7 +3,6 @@ package resolution
 import (
 	"fmt"
 	"github.com/appellative-ai/center/exchange"
-	"github.com/appellative-ai/center/template"
 	"github.com/appellative-ai/core/messaging"
 	"github.com/appellative-ai/core/rest"
 	"github.com/appellative-ai/postgres/request"
@@ -13,7 +12,7 @@ import (
 )
 
 const (
-	NamespaceName = "common:core:agent/namespace/center"
+	NamespaceName = "common:core:agent/resolution/center"
 	duration      = time.Second * 30
 	timeout       = time.Second * 4
 )
@@ -31,26 +30,23 @@ type agentT struct {
 
 	retriever *retrieval.Interface
 	requester *request.Interface
-	processor *template.Interface
 }
 
 // init - register an agent constructor
 func init() {
 	exchange.RegisterConstructor(NamespaceName, func() messaging.Agent {
-		agent = newAgent(retrieval.Retriever, request.Requester, template.Processor)
+		agent = newAgent(retrieval.Retriever, request.Requester)
 		return agent
 	})
 }
 
-func newAgent(retriever *retrieval.Interface, requester *request.Interface, processor *template.Interface) *agentT {
+func newAgent(retriever *retrieval.Interface, requester *request.Interface) *agentT {
 	a := new(agentT)
 	a.timeout = timeout
 	a.ticker = messaging.NewTicker(messaging.ChannelEmissary, duration)
 	a.emissary = messaging.NewEmissaryChannel()
 	a.retriever = retriever
 	a.requester = requester
-	a.processor = processor
-
 	return a
 }
 

@@ -1,4 +1,4 @@
-package resolution
+package notification
 
 import "fmt"
 
@@ -8,6 +8,6 @@ func ExampleNewAgent() {
 	fmt.Printf("test: newAgent() -> [%v]\n", a)
 
 	//Output:
-	//test: newAgent() -> [common:core:agent/resolution/center]
+	//test: newAgent() -> [common:core:agent/notification/center]
 
 }

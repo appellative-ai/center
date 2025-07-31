@@ -19,6 +19,11 @@ const (
 	NamespaceName = "common:core:agent/namespace/center"
 	duration      = time.Second * 30
 	timeout       = time.Second * 4
+
+	retrievalPath    = "/namespace/retrieval"
+	relationPath     = "/namespace/relation"
+	requestThingPath = "/namespace/request/thing"
+	requestLinkPath  = "/namespace/request/link"
 )
 
 var (
@@ -114,14 +119,17 @@ func (a *agentT) Link(next rest.Exchange) rest.Exchange {
 		defer cancel()
 		var buf bytes.Buffer
 
-		switch req.Method {
-		case http.MethodGet:
-
-			buf, err = a.get(ctx, req)
-		case http.MethodPost:
-			buf, err = a.post(ctx, req)
+		switch req.URL.Path {
+		case retrievalPath:
+			buf, err = a.retrieval(ctx, req)
+		case relationPath:
+			buf, err = a.relation(ctx, req)
+		case requestThingPath:
+			buf, err = a.thingRequest(ctx, req)
+		case requestLinkPath:
+			buf, err = a.linkRequest(ctx, req)
 		default:
-			return httpx.NewResponse(http.StatusMethodNotAllowed, nil, nil), errors.New("method not allowed")
+			return httpx.NewResponse(http.StatusBadRequest, nil, nil), errors.New(fmt.Sprintf("path is invalid [%v]", req.URL.Path))
 		}
 		if err != nil {
 			return httpx.NewResponse(http.StatusInternalServerError, nil, nil), err
