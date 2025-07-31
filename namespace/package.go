@@ -5,4 +5,5 @@ package namespace
 // Path : GET  /namespace/retrieval
 //        POST /namespace/retrieval
 //        POST /namespace/relation
-//        POST /namespace/request
+//        PUT /namespace/request/thing
+//        PUT /namespace/request/link
