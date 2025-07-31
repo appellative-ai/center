@@ -1,13 +1,14 @@
-package retrieval
+package namespace
 
 import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/appellative-ai/center/template"
+	"github.com/appellative-ai/center/exchange"
 	"github.com/appellative-ai/core/httpx"
 	"github.com/appellative-ai/core/messaging"
 	"github.com/appellative-ai/core/rest"
+	"github.com/appellative-ai/postgres/request"
 	"github.com/appellative-ai/postgres/retrieval"
 	"net/http"
 	"time"
@@ -19,9 +20,9 @@ const (
 	timeout       = time.Second * 4
 )
 
-func NewAgent() messaging.Agent {
-	return newAgent(retrieval.Retriever, template.Processor)
-}
+var (
+	agent *agentT
+)
 
 type agentT struct {
 	running bool
@@ -31,17 +32,27 @@ type agentT struct {
 	emissary *messaging.Channel
 
 	retriever *retrieval.Interface
-	processor *template.Interface
+	requester *request.Interface
+	//processor *template.Interface
 }
 
-func newAgent(retriever *retrieval.Interface, processor *template.Interface) *agentT {
+// init - register an agent constructor
+func init() {
+	exchange.RegisterConstructor(NamespaceName, func() messaging.Agent {
+		agent = newAgent(retrieval.Retriever, request.Requester)
+		return agent
+	})
+}
+
+func newAgent(retriever *retrieval.Interface, requester *request.Interface) *agentT {
 	a := new(agentT)
 	a.timeout = timeout
 	a.ticker = messaging.NewTicker(messaging.ChannelEmissary, duration)
 	a.emissary = messaging.NewEmissaryChannel()
 
 	a.retriever = retriever
-	a.processor = processor
+	a.requester = requester
+	//a.processor = processor
 	return a
 }
 
@@ -116,4 +127,12 @@ func (a *agentT) Link(next rest.Exchange) rest.Exchange {
 		}
 		return httpx.NewResponse(http.StatusOK, nil, buf), nil
 	}
+}
+
+func (a *agentT) expand(r *http.Request) (response, error) {
+	if r == nil {
+		return response{}, errors.New("http Request is nil")
+	}
+
+	return response{}, nil
 }

@@ -3,8 +3,9 @@ package template
 import (
 	"errors"
 	"fmt"
+	"github.com/appellative-ai/center/exchange"
 	"github.com/appellative-ai/core/messaging"
-	"github.com/appellative-ai/postgres/resolution"
+	"github.com/appellative-ai/postgres/request"
 	"net/http"
 	"time"
 )
@@ -14,20 +15,15 @@ const (
 	duration      = time.Second * 30
 	timeout       = time.Second * 4
 
-	defaultGetName = "common:core:retrieval/query"
+	defaultGetName = "common:core:namespace/query"
 )
 
-// TODO: need to integrate a retrieval that has an implied name, getDefaultName, as the GET arguments
+// TODO: need to integrate a namespace that has an implied name, getDefaultName, as the GET arguments
 //       are in the query string, not the request body
 
 var (
 	agent *agentT
 )
-
-func NewAgent() messaging.Agent {
-	agent = newAgent(resolution.Resolver)
-	return agent
-}
 
 type agentT struct {
 	running bool
@@ -36,16 +32,24 @@ type agentT struct {
 	ticker   *messaging.Ticker
 	emissary *messaging.Channel
 
-	resolver *resolution.Interface
+	requester *request.Interface
 }
 
-func newAgent(resolver *resolution.Interface) *agentT {
+// init - register an agent constructor
+func init() {
+	exchange.RegisterConstructor(NamespaceName, func() messaging.Agent {
+		agent = newAgent(request.Requester)
+		return agent
+	})
+}
+
+func newAgent(requester *request.Interface) *agentT {
 	a := new(agentT)
 	a.timeout = timeout
 	a.ticker = messaging.NewTicker(messaging.ChannelEmissary, duration)
 	a.emissary = messaging.NewEmissaryChannel()
 
-	a.resolver = resolver
+	a.requester = requester
 	return a
 }
 
