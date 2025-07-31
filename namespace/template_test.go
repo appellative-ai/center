@@ -40,3 +40,50 @@ func ExampleArgs2() {
 
 
 */
+
+func ExampleBuild_Sort() {
+	args := []arg{
+		{Name: "test5", Value: "string"},
+		{Name: "TESt1", Value: "string"},
+	}
+	params := []param{
+		{Name: "test5"},
+		{Name: "TESt4"},
+	}
+
+	build(args, params)
+
+	fmt.Printf("test: build() [args:%v] [params:%v]\n", args, params)
+
+	//Output:
+	//test: build() [args:[{TESt1 string} {test5 string}]] [params:[{TESt4 false  } {test5 false  }]]
+
+}
+
+func ExampleSlice() {
+
+	params := []param{
+		{Name: "test5"},
+		{Name: "TESt4"},
+	}
+
+	fmt.Printf("test: build() [params:%v]\n", params)
+	appendValue(params)
+	fmt.Printf("test: build() [params:%v]\n", params)
+	appendPointer(&params)
+	fmt.Printf("test: build() [params:%v]\n", params)
+
+	//Output:
+	//test: build() [params:[{test5 false  } {TESt4 false  }]]
+	//test: build() [params:[{test5 false  } {TESt4 false  }]]
+	//test: build() [params:[{test5 false  } {TESt4 false  } {new item false  }]]
+	
+}
+
+func appendValue(params []param) {
+	params = append(params, param{Name: "new item"})
+}
+
+func appendPointer(params *[]param) {
+	*params = append(*params, param{Name: "new item"})
+}

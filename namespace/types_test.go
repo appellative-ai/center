@@ -7,10 +7,12 @@ import (
 
 func ExampleRelation() {
 	r := tagRelation{
-		Name:     "test:agent",
-		Instance: "core:aspect/resiliency",
-		Pattern:  "core:aspect/expressive",
+		Name: "test:agent",
+		//Instance: "core:aspect/resiliency",
+		//Pattern:  "core:aspect/expressive",
 		Args: []arg{
+			{Name: "instance", Value: "core:aspect/resiliency"},
+			{Name: "pattern", Value: "core:aspect/expressive"},
 			{Name: "kind", Value: "aspect"},
 			{Name: "count", Value: 25},
 		},

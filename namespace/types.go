@@ -6,10 +6,8 @@ type arg struct {
 }
 
 type tagRelation struct {
-	Name     string `json:"name"`
-	Instance string `json:"instance"`
-	Pattern  string `json:"pattern"`
-	Args     []arg  `json:"args"`
+	Name string `json:"name"`
+	Args []arg  `json:"args"`
 }
 
 type tagRetrieval struct {
