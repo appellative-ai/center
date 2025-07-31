@@ -14,7 +14,7 @@ func ExampleRelation() {
 			{Name: "instance", Value: "core:aspect/resiliency"},
 			{Name: "pattern", Value: "core:aspect/expressive"},
 			{Name: "kind", Value: "aspect"},
-			{Name: "count", Value: 25},
+			{Name: "count", Value: "25"},
 		},
 	}
 
@@ -33,7 +33,7 @@ func ExampleRetrieval() {
 
 		Args: []arg{
 			{Name: "kind", Value: "aspect"},
-			{Name: "count", Value: 25},
+			{Name: "count", Value: "25"},
 		},
 	}
 

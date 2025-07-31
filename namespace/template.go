@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"slices"
+	"strconv"
 	"strings"
 )
 
@@ -25,7 +26,7 @@ type template struct {
 	Params []param `json:"args"`
 }
 
-func build(args []arg, params []param) (t []any, err error) {
+func build(args []arg, params []param) ([]any, error) {
 	if len(args) == 0 {
 		return nil, errors.New("input args are empty")
 	}
@@ -38,29 +39,44 @@ func build(args []arg, params []param) (t []any, err error) {
 	slices.SortFunc(args, func(a, b arg) int {
 		return strings.Compare(strings.ToLower(a.Name), strings.ToLower(b.Name))
 	})
-	// var argIndex = 0
 	var ix = 0
+	var temp []any
 
 	for _, a := range args {
 		p := params[ix]
-		if a.Name == params[ix].Name {
-			err = validateType(a, p)
+		switch strings.Compare(a.Name, p.Name) {
+		case 0:
+			v, err := createValue(a, p)
 			if err != nil {
-				return
+				return nil, err
 			}
-
+			temp = append(temp, v)
+			ix++
+		case -1:
+			return nil, errors.New(fmt.Sprintf("argument name [%v] is not in the parameter list", a.Name))
+		case 1:
+			if !p.Nullable {
+				return nil, errors.New(fmt.Sprintf("parameter [%v] does not allow nulls", p.Name))
+			}
+			ix++
 		}
-
+		if ix >= len(params) {
+			return nil, errors.New(fmt.Sprintf("argument name [%v] is not in the parameter list", a.Name))
+			//break
+		}
 	}
-	return
+	return temp, nil
 }
 
-func validateType(a arg, p param) error {
-	if a.Value == nil && !p.Nullable {
-		return errors.New(fmt.Sprintf("parameter %v does not allow nulls", p.Name))
+func createValue(a arg, p param) (any, error) {
+	switch p.Type {
+	case "string":
+		return a.Value, nil
+	case "int":
+		i, err := strconv.Atoi(a.Value)
+		return i, err
 	}
-
-	return nil
+	return nil, errors.New(fmt.Sprintf("parameter [%v] type [%v] is not supported", p.Name, p.Type))
 }
 
 func expand(r *http.Request) (response, error) {

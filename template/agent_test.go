@@ -3,11 +3,11 @@ package template
 import "fmt"
 
 func ExampleNewAgent() {
-	a := newAgent(nil)
+	a := NewAgent(nil)
 
 	fmt.Printf("test: newAgent() -> [%v]\n", a)
 
 	//Output:
-	//test: newAgent() -> [common:core:agent/namespace/center]
+	//test: newAgent() -> [common:core:agent/template/center]
 
 }

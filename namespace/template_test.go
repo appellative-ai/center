@@ -60,6 +60,55 @@ func ExampleBuild_Sort() {
 
 }
 
+func ExampleBuild_Valid() {
+	args := []arg{
+		{Name: "kind", Value: "agent"},
+		{Name: "count", Value: "123"},
+		//{Name: "order", Value: ""},
+	}
+	params := []param{
+		{Name: "kind", Type: "string", SqlType: "", Nullable: false},
+		{Name: "count", Type: "int", SqlType: "", Nullable: false},
+		{Name: "order", Type: "string", SqlType: "", Nullable: true},
+	}
+
+	values, err := build(args, params)
+
+	fmt.Printf("test: build() %v [err:%v]\n", values, err)
+
+	//Output:
+	//test: build() [123 agent] [err:<nil>]
+
+}
+
+func ExampleBuild_Invalid() {
+	args := []arg{
+		{Name: "kind", Value: "agent"},
+		{Name: "count", Value: "123"},
+		{Name: "ordb", Value: "desc"},
+	}
+	params := []param{
+		{Name: "kind", Type: "string", SqlType: "", Nullable: false},
+		{Name: "count", Type: "int", SqlType: "", Nullable: false},
+		{Name: "order", Type: "string", SqlType: "", Nullable: true},
+	}
+	values, err := build(args, params)
+	fmt.Printf("test: build() %v [err:%v]\n", values, err)
+
+	args = []arg{
+		{Name: "kind", Value: "agent"},
+		{Name: "count", Value: "123"},
+		{Name: "order2", Value: "desc"},
+	}
+	values, err = build(args, params)
+	fmt.Printf("test: build() %v [err:%v]\n", values, err)
+
+	//Output:
+	//test: build() [] [err:argument name [ordb] is not in the parameter list]
+	//test: build() [] [err:argument name [order2] is not in the parameter list]
+
+}
+
 func ExampleSlice() {
 
 	params := []param{
@@ -77,7 +126,7 @@ func ExampleSlice() {
 	//test: build() [params:[{test5 false  } {TESt4 false  }]]
 	//test: build() [params:[{test5 false  } {TESt4 false  }]]
 	//test: build() [params:[{test5 false  } {TESt4 false  } {new item false  }]]
-	
+
 }
 
 func appendValue(params []param) {

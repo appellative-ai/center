@@ -2,54 +2,38 @@ package template
 
 import (
 	"errors"
-	"fmt"
-	"github.com/appellative-ai/center/exchange"
 	"github.com/appellative-ai/core/messaging"
-	"github.com/appellative-ai/postgres/request"
-	"net/http"
+	"github.com/appellative-ai/core/std"
+	"github.com/appellative-ai/postgres/retrieval"
 	"time"
 )
 
 const (
-	NamespaceName = "common:core:agent/namespace/templatecenter"
-	duration      = time.Second * 30
+	NamespaceName = "common:core:agent/template/center"
 	timeout       = time.Second * 4
-
-	defaultGetName = "common:core:namespace/query"
+	defaultSql    = "CALL dbo.Representation($1)"
 )
 
-// TODO: need to integrate a namespace that has an implied name, getDefaultName, as the GET arguments
-//       are in the query string, not the request body
+type Agent interface {
+	messaging.Agent
+	Build(name string, args []Arg) (Result, error)
+}
 
 var (
 	agent *agentT
 )
 
 type agentT struct {
-	running bool
-	timeout time.Duration
-
-	ticker   *messaging.Ticker
-	emissary *messaging.Channel
-
-	requester *request.Interface
+	timeout   time.Duration
+	cache     *std.MapT[string, template]
+	retriever *retrieval.Interface
 }
 
-// init - register an agent constructor
-func init() {
-	exchange.RegisterConstructor(NamespaceName, func() messaging.Agent {
-		agent = newAgent(request.Requester)
-		return agent
-	})
-}
-
-func newAgent(requester *request.Interface) *agentT {
+func NewAgent(retriever *retrieval.Interface) Agent {
 	a := new(agentT)
 	a.timeout = timeout
-	a.ticker = messaging.NewTicker(messaging.ChannelEmissary, duration)
-	a.emissary = messaging.NewEmissaryChannel()
-
-	a.requester = requester
+	a.cache = std.NewSyncMap[string, template]()
+	a.retriever = retriever
 	return a
 }
 
@@ -66,47 +50,29 @@ func (a *agentT) Message(m *messaging.Message) {
 	}
 	switch m.Name {
 	case messaging.ConfigEvent:
-		if a.running {
-			return
-		}
-		//messaging.UpdateContent[time.Duration](&a.timeout, m)
+		messaging.UpdateContent[time.Duration](&a.timeout, m)
 		return
-	case messaging.StartupEvent:
-		if a.running {
-			return
+	}
+}
+
+func (a *agentT) Build(name string, args []Arg) (Result, error) {
+	if name == "" {
+		return Result{}, errors.New("name is empty")
+	}
+	if len(args) == 0 {
+		return Result{}, errors.New("arguments are empty")
+	}
+	t := a.cache.Load(name)
+	if t.Name == "" {
+		var err error
+		t, err = a.add(name)
+		if err != nil {
+			return Result{}, err
 		}
-		a.running = true
-		a.run()
-		return
-	case messaging.ShutdownEvent:
-		if !a.running {
-			return
-		}
-		a.running = false
 	}
-	switch m.Channel() {
-	case messaging.ChannelControl, messaging.ChannelEmissary:
-
-		a.emissary.C <- m
-	default:
-		fmt.Printf("limiter - invalid channel %v\n", m)
+	newArgs, err := build(args, t.Params)
+	if err != nil {
+		return Result{}, err
 	}
-}
-
-// Run - run the agent
-func (a *agentT) run() {
-	go emissaryAttend(a)
-}
-
-func (a *agentT) emissaryFinalize() {
-	a.emissary.Close()
-	a.ticker.Stop()
-}
-
-func (a *agentT) expand(r *http.Request) (Response, error) {
-	if r == nil {
-		return Response{}, errors.New("http Request is nil")
-	}
-
-	return Response{}, nil
+	return Result{Sql: t.Sql, Args: newArgs}, nil
 }
