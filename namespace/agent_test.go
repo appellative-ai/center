@@ -3,7 +3,7 @@ package namespace
 import "fmt"
 
 func ExampleNewAgent() {
-	a := newAgent(nil, nil)
+	a := newAgent(nil, nil, nil)
 
 	fmt.Printf("test: newAgent() -> [%v]\n", a)
 

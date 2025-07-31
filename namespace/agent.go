@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/appellative-ai/center/exchange"
+	"github.com/appellative-ai/center/template"
 	"github.com/appellative-ai/core/httpx"
 	"github.com/appellative-ai/core/messaging"
 	"github.com/appellative-ai/core/rest"
@@ -33,18 +34,18 @@ type agentT struct {
 
 	retriever *retrieval.Interface
 	requester *request.Interface
-	//processor *template.Interface
+	processor template.Agent
 }
 
 // init - register an agent constructor
 func init() {
 	exchange.RegisterConstructor(NamespaceName, func() messaging.Agent {
-		agent = newAgent(retrieval.Retriever, request.Requester)
+		agent = newAgent(retrieval.Retriever, request.Requester, template.NewAgent(retrieval.Retriever))
 		return agent
 	})
 }
 
-func newAgent(retriever *retrieval.Interface, requester *request.Interface) *agentT {
+func newAgent(retriever *retrieval.Interface, requester *request.Interface, processor template.Agent) *agentT {
 	a := new(agentT)
 	a.timeout = timeout
 	a.ticker = messaging.NewTicker(messaging.ChannelEmissary, duration)
@@ -52,7 +53,7 @@ func newAgent(retriever *retrieval.Interface, requester *request.Interface) *age
 
 	a.retriever = retriever
 	a.requester = requester
-	//a.processor = processor
+	a.processor = processor
 	return a
 }
 

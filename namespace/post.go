@@ -8,9 +8,10 @@ import (
 
 func (a *agentT) post(ctx context.Context, r *http.Request) (bytes.Buffer, error) {
 	var buf bytes.Buffer
-	resp, err := expand(r)
+	name := ""
+	res, err := a.processor.Build(name, nil)
 	if err != nil {
 		return buf, err
 	}
-	return a.retriever.Marshal(ctx, resp.Name, resp.Sql, resp.Args)
+	return a.retriever.Marshal(ctx, name, res.Sql, res.Args)
 }
