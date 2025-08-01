@@ -2,6 +2,7 @@ package operations
 
 import (
 	"fmt"
+	"github.com/appellative-ai/core/std"
 
 	"github.com/appellative-ai/core/messaging"
 	"time"
@@ -17,9 +18,7 @@ var (
 )
 
 type agentT struct {
-	state  *operationsT
-	agents *messaging.Exchange
-
+	running  bool
 	ticker   *messaging.Ticker
 	emissary *messaging.Channel
 }
@@ -32,9 +31,7 @@ func init() {
 
 func newAgent() *agentT {
 	a := new(agentT)
-	a.agents = messaging.NewExchange()
-	//a.agents.Register(resolution.NewAgent())
-	//a.agents.Register(namespace.NewAgent())
+
 	agent = a
 
 	a.ticker = messaging.NewTicker(messaging.ChannelEmissary, duration)
@@ -56,22 +53,22 @@ func (a *agentT) Message(m *messaging.Message) {
 	}
 	switch m.Name {
 	case messaging.ConfigEvent:
-		if a.state.running {
+		if a.running {
 			return
 		}
 		return
 	case messaging.StartupEvent:
-		if a.state.running {
+		if a.running {
 			return
 		}
-		a.state.running = true
+		a.running = true
 		a.run()
 		return
 	case messaging.ShutdownEvent:
-		if !a.state.running {
+		if !a.running {
 			return
 		}
-		a.state.running = false
+		a.running = false
 	}
 	switch m.Channel() {
 	case messaging.ChannelControl, messaging.ChannelEmissary:
@@ -110,7 +107,7 @@ func (a *agentT) message(m *messaging.Message) {
 	var local []string
 	var nonLocal []string
 	for _, to := range recipients {
-		if messaging.Origin.IsLocalCollective(to) {
+		if std.Origin.IsLocalCollective(to) {
 			local = append(local, to)
 		} else {
 			nonLocal = append(nonLocal, to)
@@ -139,19 +136,19 @@ func (a *agentT) trace(name, task, observation, action string) {
 func (a *agentT) configure(m *messaging.Message) {
 	switch m.ContentType() {
 	case messaging.ContentTypeMap:
-		cfg, status := messaging.MapContent(m)
-		if !status.OK() {
-			messaging.Reply(m, messaging.EmptyMapError(a.Name()), a.Name())
-			return
-		}
-		a.state = initialize(cfg)
+		//cfg, status := messaging.MapContent(m)
+		//if !status.OK() {
+		//	messaging.Reply(m, messaging.EmptyMapError(a.Name()), a.Name())
+		//	return
+		//}
+		//a.state = initialize(cfg)
 		// Initialize linked collectives
-		if messaging.Origin.Collective != "" {
+		if std.Origin.Collective != "" {
 			// TODO: Initialize linked collectives by reading the configured collective links and then reference the
 			//       registry for collective host names
 		}
 	}
-	messaging.Reply(m, messaging.StatusOK(), a.Name())
+	messaging.Reply(m, std.StatusOK, a.Name())
 }
 
 func (a *agentT) configureAgents() {

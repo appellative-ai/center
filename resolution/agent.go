@@ -17,10 +17,6 @@ const (
 	timeout       = time.Second * 4
 )
 
-var (
-	agent *agentT
-)
-
 type agentT struct {
 	running bool
 	timeout time.Duration
@@ -35,18 +31,17 @@ type agentT struct {
 // init - register an agent constructor
 func init() {
 	exchange.RegisterConstructor(NamespaceName, func() messaging.Agent {
-		agent = newAgent(retrieval.Retriever, request.Requester)
-		return agent
+		return newAgent()
 	})
 }
 
-func newAgent(retriever *retrieval.Interface, requester *request.Interface) *agentT {
+func newAgent() *agentT {
 	a := new(agentT)
 	a.timeout = timeout
 	a.ticker = messaging.NewTicker(messaging.ChannelEmissary, duration)
 	a.emissary = messaging.NewEmissaryChannel()
-	a.retriever = retriever
-	a.requester = requester
+	a.retriever = retrieval.Retriever
+	a.requester = request.Requester
 	return a
 }
 

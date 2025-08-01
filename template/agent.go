@@ -20,10 +20,6 @@ type Agent interface {
 	Build(name string, args []Arg) (Result, error)
 }
 
-var (
-	agent *agentT
-)
-
 type agentT struct {
 	timeout   time.Duration
 	cache     *std.MapT[string, Entry]
