@@ -125,9 +125,9 @@ func (a *agentT) Link(next rest.Exchange) rest.Exchange {
 		case relationPath:
 			buf, err = a.relation(ctx, req)
 		case requestThingPath:
-			buf, err = a.thingRequest(ctx, req)
+			_, err = a.thingRequest(ctx, req)
 		case requestLinkPath:
-			buf, err = a.linkRequest(ctx, req)
+			_, err = a.linkRequest(ctx, req)
 		default:
 			return httpx.NewResponse(http.StatusBadRequest, nil, nil), errors.New(fmt.Sprintf("path is invalid [%v]", req.URL.Path))
 		}

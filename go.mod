@@ -4,7 +4,7 @@ go 1.23.11
 
 require (
 	github.com/appellative-ai/core v0.0.0-20250731180317-110298b33afa
-	github.com/appellative-ai/postgres v0.0.0-20250725121832-03700b800372
+	github.com/appellative-ai/postgres v0.0.0-20250801093506-8f9c56f6dd34
 )
 
 require (

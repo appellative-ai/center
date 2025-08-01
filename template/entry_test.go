@@ -6,7 +6,7 @@ import (
 )
 
 func ExampleParams() {
-	a := template{Name: "CALL dbo.QueryNamespace($1,$2,$3)", Params: []Param{
+	a := Entry{Name: "CALL dbo.QueryNamespace($1,$2,$3)", Params: []Param{
 		{Name: "name", Nullable: true, Type: "string", SqlType: ""},
 		{Name: "count", Nullable: false, Type: "int", SqlType: ""},
 		{Name: "createDate", Nullable: false, Type: "string", SqlType: "DateTime"},

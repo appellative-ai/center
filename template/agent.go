@@ -16,6 +16,7 @@ const (
 
 type Agent interface {
 	messaging.Agent
+	Add(entry Entry)
 	Build(name string, args []Arg) (Result, error)
 }
 
@@ -25,14 +26,14 @@ var (
 
 type agentT struct {
 	timeout   time.Duration
-	cache     *std.MapT[string, template]
+	cache     *std.MapT[string, Entry]
 	retriever *retrieval.Interface
 }
 
 func NewAgent(retriever *retrieval.Interface) Agent {
 	a := new(agentT)
 	a.timeout = timeout
-	a.cache = std.NewSyncMap[string, template]()
+	a.cache = std.NewSyncMap[string, Entry]()
 	a.retriever = retriever
 	return a
 }
@@ -53,6 +54,13 @@ func (a *agentT) Message(m *messaging.Message) {
 		messaging.UpdateContent[time.Duration](&a.timeout, m)
 		return
 	}
+}
+
+func (a *agentT) Add(entry Entry) {
+	if entry.Name == "" {
+		return
+	}
+	a.cache.Store(entry.Name, entry)
 }
 
 func (a *agentT) Build(name string, args []Arg) (Result, error) {

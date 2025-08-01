@@ -8,18 +8,6 @@ import (
 	"strings"
 )
 
-type Param struct {
-	Name     string `json:"name"`
-	Nullable bool   `json:"nullable"`
-	Type     string `json:"type"`
-	SqlType  string `json:"sql-type"`
-}
-type template struct {
-	Name   string  `json:"name"`
-	Sql    string  `json:"sql"`
-	Params []Param `json:"params"`
-}
-
 func build(args []Arg, params []Param) ([]any, error) {
 	if len(args) == 0 {
 		return nil, errors.New("input args are empty")
