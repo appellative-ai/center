@@ -12,9 +12,9 @@ import (
 )
 
 const (
-	NamespaceName = "common:core:agent/notification/center"
-	duration      = time.Second * 30
-	timeout       = time.Second * 4
+	AgentName = "common:core:agent/notification/center"
+	duration  = time.Second * 30
+	timeout   = time.Second * 4
 )
 
 type agentT struct {
@@ -30,7 +30,7 @@ type agentT struct {
 
 // init - register an agent constructor
 func init() {
-	exchange.RegisterConstructor(NamespaceName, func() messaging.Agent {
+	exchange.RegisterConstructor(AgentName, func() messaging.Agent {
 		return newAgent()
 	})
 }
@@ -50,7 +50,7 @@ func newAgent() *agentT {
 func (a *agentT) String() string { return a.Name() }
 
 // Name - agent identifier
-func (a *agentT) Name() string { return NamespaceName }
+func (a *agentT) Name() string { return AgentName }
 
 // Message - message the agent
 func (a *agentT) Message(m *messaging.Message) {

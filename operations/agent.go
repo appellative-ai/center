@@ -2,15 +2,14 @@ package operations
 
 import (
 	"fmt"
-	"github.com/appellative-ai/core/std"
-
 	"github.com/appellative-ai/core/messaging"
+	"github.com/appellative-ai/core/std"
 	"time"
 )
 
 const (
-	NamespaceName = "common:core:agent/operations/collective"
-	duration      = time.Second * 30
+	AgentName = "common:core:agent/operations/collective"
+	duration  = time.Second * 30
 )
 
 var (
@@ -44,7 +43,7 @@ func newAgent() *agentT {
 func (a *agentT) String() string { return a.Name() }
 
 // Name - agent identifier
-func (a *agentT) Name() string { return NamespaceName }
+func (a *agentT) Name() string { return AgentName }
 
 // Message - message the agent
 func (a *agentT) Message(m *messaging.Message) {

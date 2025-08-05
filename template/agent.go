@@ -9,9 +9,9 @@ import (
 )
 
 const (
-	NamespaceName = "common:core:agent/template/center"
-	timeout       = time.Second * 4
-	defaultSql    = "CALL dbo.Representation($1)"
+	AgentName  = "common:core:agent/template/center"
+	timeout    = time.Second * 4
+	defaultSql = "CALL dbo.Representation($1)"
 )
 
 type Agent interface {
@@ -38,7 +38,7 @@ func NewAgent(retriever *retrieval.Interface) Agent {
 func (a *agentT) String() string { return a.Name() }
 
 // Name - agent identifier
-func (a *agentT) Name() string { return NamespaceName }
+func (a *agentT) Name() string { return AgentName }
 
 // Message - message the agent
 func (a *agentT) Message(m *messaging.Message) {
