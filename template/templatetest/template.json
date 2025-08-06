@@ -1,7 +1,8 @@
 [
   {
-    "name":"CALL dbo.QueryNamespace($1,$2,$3)",
-    "args":[
+    "name":"common:core:retrieval/test",
+    "sql":"CALL dbo.QueryNamespace($1,$2,$3)",
+    "params":[
       {
         "name":"name",
         "nullable":true,

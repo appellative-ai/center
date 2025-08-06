@@ -1,9 +1,11 @@
 package template
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func ExampleNewAgent() {
-	a := NewAgent(nil)
+	a := newAgent(nil)
 
 	fmt.Printf("test: newAgent() -> [%v]\n", a)
 

@@ -1,42 +1,23 @@
 package template
 
-import (
-	"encoding/json"
-	"fmt"
+import "fmt"
+
+const (
+	fileName = "file://[cwd]/templatetest/template.json"
+	name     = "common:core:retrieval/test"
 )
 
-func ExampleParams() {
-	a := Entry{Name: "CALL dbo.QueryNamespace($1,$2,$3)", Params: []Param{
-		{Name: "name", Nullable: true, Type: "string", SqlType: ""},
-		{Name: "count", Nullable: false, Type: "int", SqlType: ""},
-		{Name: "createDate", Nullable: false, Type: "string", SqlType: "DateTime"},
-	},
-	}
+func ExampleAddEntry() {
+	agent := newAgent(nil)
 
-	fmt.Printf("test: template() -> [sql:%v] [args:%v]\n", a.Name, a.Params)
-	buf, err := json.Marshal(a)
-	fmt.Printf("test: template() -> [%v] [err:%v]\n", string(buf), err)
+	err := AddEntry(agent, fileName)
+	fmt.Printf("test: AddEntry() -> [err:%v]\n", err)
+
+	t := agent.cache.Load(name)
+	fmt.Printf("test: Entry() -> [%v]\n", t)
 
 	//Output:
-	//test: template() -> [sql:CALL dbo.QueryNamespace($1,$2,$3)] [args:[{name true string } {count false int } {createDate false string DateTime}]]
-	//test: template() -> [{"name":"CALL dbo.QueryNamespace($1,$2,$3)","args":[{"name":"name","nullable":true,"type":"string","sql-type":""},{"name":"count","nullable":false,"type":"int","sql-type":""},{"name":"createDate","nullable":false,"type":"string","sql-type":"DateTime"}]}] [err:<nil>]
+	//test: AddEntry() -> [err:<nil>]
+	//test: Entry() -> [{common:core:retrieval/test CALL dbo.QueryNamespace($1,$2,$3) [{name true string } {count false int } {createDate false string DateTime}]}]
 
 }
-
-/*
-func ExampleArgs2() {
-	a := template{Sql: "sp.QueryNamespace", Args: []arg{
-		{Name: "name", Value: "test:agent"},
-		{Name: "count", Value: 123},
-	},
-	}
-	fmt.Printf("test: template() -> [sql:%v] [args:%v]\n", a.Sql, a.Args)
-	buf, err := json.Marshal(a)
-	fmt.Printf("test: template() -> [%v] [err:%v]\n", string(buf), err)
-
-	//Output:
-	//fail
-}
-
-
-*/

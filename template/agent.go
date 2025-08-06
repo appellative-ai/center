@@ -27,6 +27,10 @@ type agentT struct {
 }
 
 func NewAgent(retriever *retrieval.Interface) Agent {
+	return newAgent(retriever)
+}
+
+func newAgent(retriever *retrieval.Interface) *agentT {
 	a := new(agentT)
 	a.timeout = timeout
 	a.cache = std.NewSyncMap[string, Entry]()
@@ -74,7 +78,7 @@ func (a *agentT) Build(name string, args []Arg) (Result, error) {
 			return Result{}, err
 		}
 	}
-	newArgs, err := build(args, t.Params)
+	newArgs, err := Build(args, t.Params)
 	if err != nil {
 		return Result{}, err
 	}
