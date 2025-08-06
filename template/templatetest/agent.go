@@ -16,14 +16,18 @@ type agentT struct {
 	cache *std.MapT[string, template.Entry]
 }
 
-func NewAgent() template.Agent {
-	return newAgent()
+func NewAgent(fileName string) (template.Agent, error) {
+	return newAgent(fileName)
 }
 
-func newAgent() *agentT {
+func newAgent(fileName string) (*agentT, error) {
 	a := new(agentT)
 	a.cache = std.NewSyncMap[string, template.Entry]()
-	return a
+	if fileName == "" {
+		return a, nil
+	}
+	err := template.AddEntry(a, fileName)
+	return a, err
 }
 
 // String - identity

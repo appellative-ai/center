@@ -3,6 +3,7 @@ package namespace
 import (
 	"encoding/json"
 	"fmt"
+	"testing"
 )
 
 func ExampleLink() {
@@ -21,4 +22,17 @@ func ExampleLink() {
 	//Output:
 	//test: Link() -> [{"name":"test:agent","cname":"headers","thing1":"core:thing/first","thing2":"core:thing/second","author":"core:person/bob"}] [err:<nil>]
 
+}
+
+func Test(t *testing.T) {
+	tests := []struct {
+		name string
+	}{
+		// TODO: test cases
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+
+		})
+	}
 }

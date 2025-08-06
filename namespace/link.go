@@ -17,7 +17,7 @@ type tagLink struct {
 	Author string `json:"author"`
 }
 
-func (a *agentT) linkRequest(ctx context.Context, r *http.Request) (request.Result, error) {
+func (a *agentT) linkRequest(ctx context.Context, requester *request.Interface, processor template.Agent, r *http.Request) (request.Result, error) {
 	if r == nil {
 		return request.Result{}, errors.New("request is nil")
 	}
