@@ -23,7 +23,7 @@ type tagThing struct {
 	Author string `json:"author"`
 }
 
-func (a *agentT) thingRequest(ctx context.Context, r *http.Request) (request.Result, error) {
+func thingRequest(ctx context.Context, requester *request.Interface, processor template.Agent, r *http.Request) (request.Result, error) {
 	if r == nil {
 		return request.Result{}, errors.New("request is nil")
 	}
@@ -31,7 +31,7 @@ func (a *agentT) thingRequest(ctx context.Context, r *http.Request) (request.Res
 	if err != nil {
 		return request.Result{}, err
 	}
-	res, err1 := a.processor.Build(t.Name, []template.Arg{
+	res, err1 := processor.Build(t.Name, []template.Arg{
 		{Name: nameName, Value: t.Name},
 		{Name: cNameName, Value: t.CName},
 		{Name: authorName, Value: t.Author},
@@ -39,5 +39,5 @@ func (a *agentT) thingRequest(ctx context.Context, r *http.Request) (request.Res
 	if err1 != nil {
 		return request.Result{}, err
 	}
-	return a.requester.Execute(ctx, t.Name, res.Sql, res.Args)
+	return requester.Execute(ctx, t.Name, res.Sql, res.Args)
 }

@@ -1,8 +1,13 @@
 package namespace
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/appellative-ai/center/template"
+	"github.com/appellative-ai/postgres/request"
+	"net/http"
+	"reflect"
 	"testing"
 )
 
@@ -24,15 +29,31 @@ func ExampleLink() {
 
 }
 
-func Test(t *testing.T) {
-	tests := []struct {
-		name string
-	}{
-		// TODO: test cases
+func Test_linkRequest(t *testing.T) {
+	type args struct {
+		ctx       context.Context
+		requester *request.Interface
+		processor template.Agent
+		r         *http.Request
 	}
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-
+	tests := []struct {
+		name    string
+		args    args
+		want    request.Result
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := linkRequest(tt.args.ctx, tt.args.requester, tt.args.processor, tt.args.r)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("linkRequest() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("linkRequest() got = %v, want %v", got, tt.want)
+			}
 		})
 	}
 }

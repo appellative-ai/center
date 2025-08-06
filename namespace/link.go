@@ -17,7 +17,7 @@ type tagLink struct {
 	Author string `json:"author"`
 }
 
-func (a *agentT) linkRequest(ctx context.Context, requester *request.Interface, processor template.Agent, r *http.Request) (request.Result, error) {
+func linkRequest(ctx context.Context, requester *request.Interface, processor template.Agent, r *http.Request) (request.Result, error) {
 	if r == nil {
 		return request.Result{}, errors.New("request is nil")
 	}
@@ -25,7 +25,7 @@ func (a *agentT) linkRequest(ctx context.Context, requester *request.Interface, 
 	if err != nil {
 		return request.Result{}, err
 	}
-	res, err1 := a.processor.Build(t.Name, []template.Arg{
+	res, err1 := processor.Build(t.Name, []template.Arg{
 		{Name: nameName, Value: t.Name},
 		{Name: cNameName, Value: t.CName},
 		{Name: thing1Name, Value: t.Thing1},
@@ -35,5 +35,5 @@ func (a *agentT) linkRequest(ctx context.Context, requester *request.Interface, 
 	if err1 != nil {
 		return request.Result{}, err
 	}
-	return a.requester.Execute(ctx, t.Name, res.Sql, res.Args)
+	return requester.Execute(ctx, t.Name, res.Sql, res.Args)
 }
