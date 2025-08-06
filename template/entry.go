@@ -15,6 +15,8 @@ func AddEntry(agent Agent, fileName string) error {
 	if err != nil {
 		return err
 	}
-	agent.Add(e[0])
+	for _, entry := range e {
+		agent.Add(entry)
+	}
 	return nil
 }
