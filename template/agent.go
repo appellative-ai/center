@@ -51,7 +51,7 @@ func (a *agentT) Message(m *messaging.Message) {
 	}
 	switch m.Name {
 	case messaging.ConfigEvent:
-		messaging.UpdateContent[time.Duration](&a.timeout, m)
+		messaging.UpdateContent[time.Duration](m, &a.timeout)
 		return
 	}
 }
@@ -70,8 +70,8 @@ func (a *agentT) Build(name string, args []Arg) (Result, error) {
 	if len(args) == 0 {
 		return Result{}, errors.New("arguments are empty")
 	}
-	t := a.cache.Load(name)
-	if t.Name == "" {
+	t, ok := a.cache.Load(name)
+	if !ok {
 		var err error
 		t, err = a.add(name)
 		if err != nil {

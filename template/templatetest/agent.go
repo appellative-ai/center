@@ -57,8 +57,8 @@ func (a *agentT) Build(name string, args []template.Arg) (template.Result, error
 	if len(args) == 0 {
 		return template.Result{}, errors.New("arguments are empty")
 	}
-	t := a.cache.Load(name)
-	if t.Name == "" {
+	t, ok := a.cache.Load(name)
+	if !ok {
 		return template.Result{}, errors.New(fmt.Sprintf("template [%v] not found", name))
 	}
 	newArgs, err := template.Build(args, t.Params)

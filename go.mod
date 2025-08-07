@@ -3,8 +3,8 @@ module github.com/appellative-ai/center
 go 1.23.11
 
 require (
-	github.com/appellative-ai/core v0.0.0-20250731180317-110298b33afa
-	github.com/appellative-ai/postgres v0.0.0-20250801093506-8f9c56f6dd34
+	github.com/appellative-ai/core v0.0.0-20250807112339-6f7f35d978be
+	github.com/appellative-ai/postgres v0.0.0-20250807120028-10c18c650a28
 )
 
 require (
