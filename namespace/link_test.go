@@ -61,6 +61,6 @@ func ExampleLinkRequest() {
 	//Output:
 	//test: linkRequest() -> [result:{ 0 false false false false}] [err:query values are nil]
 	//test: linkRequest() -> [result:{ 1 true false false false}] [err:<nil>]
-	//test: Load() -> [[common:resiliency:agent/rate-limiting/request/http common:core:agent/thing1 common:core:agent/thing2 bobs uncle common resiliency agent /rate-limiting/request/http]] [ok:true]
-	
+	//test: Load() -> [common:resiliency:agent/rate-limiting/request/http] [ok:true]
+
 }

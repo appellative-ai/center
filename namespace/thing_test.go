@@ -49,6 +49,6 @@ func ExampleThingRequest() {
 	//Output:
 	//test: thingRequest() -> [result:{ 0 false false false false}] [err:query values are nil]
 	//test: thingRequest() -> [result:{ 1 true false false false}] [err:<nil>]
-	//test: Load() -> [[common:resiliency:agent/rate-limiting/request/http bobs uncle common resiliency agent /rate-limiting/request/http]] [ok:true]
+	//test: Load() -> [common:resiliency:agent/rate-limiting/request/http] [ok:true]
 
 }

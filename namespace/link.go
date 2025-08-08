@@ -20,7 +20,7 @@ func linkRequest(ctx context.Context, requester *request.Interface, values url.V
 	if err != nil {
 		return request.Result{}, err
 	}
-	return requester.Execute(ctx, name, requestLinkSql, args)
+	return requester.Execute(ctx, name, requestLinkSql, args...)
 }
 
 func createLinkArgs(values url.Values) (string, []any, error) {

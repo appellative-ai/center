@@ -30,7 +30,7 @@ func thingRequest(ctx context.Context, requester *request.Interface, values url.
 	if err != nil {
 		return request.Result{}, err
 	}
-	return requester.Execute(ctx, name, thingRequestSql, args)
+	return requester.Execute(ctx, name, thingRequestSql, args...)
 }
 
 func createThingArgs(values url.Values) (string, []any, error) {
