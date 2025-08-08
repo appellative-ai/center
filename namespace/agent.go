@@ -120,7 +120,7 @@ func (a *agentT) Link(next rest.Exchange) rest.Exchange {
 		case relationPath:
 			buf, err = relationRequest(ctx, a.retriever, a.processor, req)
 		case requestThingPath:
-			_, err = thingRequest(ctx, a.requester, a.processor, req)
+			_, err = thingRequest(ctx, a.requester, req.URL.Query())
 		case requestLinkPath:
 			_, err = linkRequest(ctx, a.requester, a.processor, req)
 		default:

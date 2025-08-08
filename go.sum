@@ -2,6 +2,10 @@ github.com/appellative-ai/core v0.0.0-20250807112339-6f7f35d978be h1:fvr/vIyGGb1
 github.com/appellative-ai/core v0.0.0-20250807112339-6f7f35d978be/go.mod h1:a8kfuZMJHcdtdksSK+aYw2Mp6lT+i25oQEB+UCqwyhs=
 github.com/appellative-ai/postgres v0.0.0-20250807120028-10c18c650a28 h1:f0CCYBtP+Hmu/hbeu2P2bGd81r4R/R1jgTyq0GGQ3zU=
 github.com/appellative-ai/postgres v0.0.0-20250807120028-10c18c650a28/go.mod h1:bX7/hU44VLnMQ47C3BV2K8SgcUKKTjTrXopp8JN54kw=
+github.com/appellative-ai/postgres v0.0.0-20250808144929-15105a5f4a20 h1:RPF3OK2uIBa9Yq1oc+zH3AQ9szA+7m/DIsed7M9ur5I=
+github.com/appellative-ai/postgres v0.0.0-20250808144929-15105a5f4a20/go.mod h1:bX7/hU44VLnMQ47C3BV2K8SgcUKKTjTrXopp8JN54kw=
+github.com/appellative-ai/postgres v0.0.0-20250808150712-ca63eddfa7a0 h1:j5lzoerfc/4RYTSF5Cn5AvrAy04QPXwTuuEsv6UI3zI=
+github.com/appellative-ai/postgres v0.0.0-20250808150712-ca63eddfa7a0/go.mod h1:bX7/hU44VLnMQ47C3BV2K8SgcUKKTjTrXopp8JN54kw=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
