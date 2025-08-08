@@ -3,37 +3,57 @@ package namespace
 import (
 	"context"
 	"errors"
-	"github.com/appellative-ai/center/template"
-	"github.com/appellative-ai/core/jsonx"
+	"github.com/appellative-ai/core/std"
 	"github.com/appellative-ai/postgres/request"
-	"net/http"
+	"net/url"
 )
 
-type tagLink struct {
-	Name   string `json:"name"`
-	CName  string `json:"cname"`
-	Thing1 string `json:"thing1"`
-	Thing2 string `json:"thing2"`
-	Author string `json:"author"`
-}
+const (
+	requestLinkSql = "CALL dbo.InsertLink($1,$2,$3,$4,$5,$6,$7,$8,$9)"
+)
 
-func linkRequest(ctx context.Context, requester *request.Interface, processor template.Agent, r *http.Request) (request.Result, error) {
-	if r == nil {
-		return request.Result{}, errors.New("request is nil")
+func linkRequest(ctx context.Context, requester *request.Interface, values url.Values) (request.Result, error) {
+	if values == nil {
+		return request.Result{}, errors.New("query values are nil")
 	}
-	t, err := jsonx.New[tagLink](r.Body, nil)
+	name, args, err := createLinkArgs(values)
 	if err != nil {
 		return request.Result{}, err
 	}
-	res, err1 := processor.Build(t.Name, []template.Arg{
-		{Name: nameName, Value: t.Name},
-		{Name: cNameName, Value: t.CName},
-		{Name: thing1Name, Value: t.Thing1},
-		{Name: thing2Name, Value: t.Thing2},
-		{Name: authorName, Value: t.Author},
-	})
-	if err1 != nil {
-		return request.Result{}, err
+	return requester.Execute(ctx, name, requestLinkSql, args)
+}
+
+func createLinkArgs(values url.Values) (string, []any, error) {
+	name := values.Get(nameName)
+	if name == "" {
+		return "", nil, errors.New("name is empty")
 	}
-	return requester.Execute(ctx, t.Name, res.Sql, res.Args)
+	author := values.Get(authorName)
+	if author == "" {
+		return "", nil, errors.New("author is empty")
+	}
+	thing1 := values.Get(thing1Name)
+	if thing1 == "" {
+		return "", nil, errors.New("thing1 is empty")
+	}
+	thing2 := values.Get(thing2Name)
+	if thing2 == "" {
+		return "", nil, errors.New("thing2 is empty")
+	}
+	n := std.NewName(name)
+	var args []any
+
+	args = append(args, name)
+	cname := values.Get(cNameName)
+	if cname != "" {
+		args = append(args, cname)
+	}
+	args = append(args, thing1)
+	args = append(args, thing2)
+	args = append(args, author)
+	args = append(args, n.Collective)
+	args = append(args, n.Domain)
+	args = append(args, n.Kind)
+	args = append(args, n.Path)
+	return name, args, nil
 }

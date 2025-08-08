@@ -1,59 +1,66 @@
 package namespace
 
 import (
-	"context"
-	"encoding/json"
 	"fmt"
-	"github.com/appellative-ai/center/template"
-	"github.com/appellative-ai/postgres/request"
-	"net/http"
-	"reflect"
-	"testing"
+	"github.com/appellative-ai/core/std"
+	"github.com/appellative-ai/postgres/request/requesttest"
+	"net/url"
 )
 
-func ExampleLink() {
-	r := tagLink{
-		Name:   "test:agent",
-		CName:  "headers",
-		Author: "core:person/bob",
-		Thing1: "core:thing/first",
-		Thing2: "core:thing/second",
-	}
+func ExampleCreateLinkArgs() {
+	values := make(url.Values)
 
-	buf, err := json.Marshal(r)
+	name, args, err := createLinkArgs(values)
+	fmt.Printf("test: createLinkArgs() -> [name:%v] [args:%v] [err:%v]\n", name, args, err)
 
-	fmt.Printf("test: Link() -> [%v] [err:%v]\n", string(buf), err)
+	values.Add(nameName, "common:resiliency:agent/rate-limiting/request/http")
+	name, args, err = createLinkArgs(values)
+	fmt.Printf("test: createLinkArgs() -> [name:%v] [args:%v] [err:%v]\n", name, args, err)
+
+	values.Add(authorName, "bobs uncle")
+	name, args, err = createLinkArgs(values)
+	fmt.Printf("test: createLinkArgs() -> [name:%v] [args:%v] [err:%v]\n", name, args, err)
+
+	values.Add(thing1Name, "common:core:agent/thing1")
+	name, args, err = createLinkArgs(values)
+	fmt.Printf("test: createLinkArgs() -> [name:%v] [args:%v] [err:%v]\n", name, args, err)
+
+	values.Add(thing2Name, "common:core:agent/thing2")
+	name, args, err = createLinkArgs(values)
+	fmt.Printf("test: createLinkArgs() -> [name:%v] [args:%v] [err:%v]\n", name, args, err)
 
 	//Output:
-	//test: Link() -> [{"name":"test:agent","cname":"headers","thing1":"core:thing/first","thing2":"core:thing/second","author":"core:person/bob"}] [err:<nil>]
+	//test: createLinkArgs() -> [name:] [args:[]] [err:name is empty]
+	//test: createLinkArgs() -> [name:] [args:[]] [err:author is empty]
+	//test: createLinkArgs() -> [name:] [args:[]] [err:thing1 is empty]
+	//test: createLinkArgs() -> [name:] [args:[]] [err:thing2 is empty]
+	//test: createLinkArgs() -> [name:common:resiliency:agent/rate-limiting/request/http] [args:[common:resiliency:agent/rate-limiting/request/http common:core:agent/thing1 common:core:agent/thing2 bobs uncle common resiliency agent /rate-limiting/request/http]] [err:<nil>]
 
 }
 
-func Test_linkRequest(t *testing.T) {
-	type args struct {
-		ctx       context.Context
-		requester *request.Interface
-		processor template.Agent
-		r         *http.Request
-	}
-	tests := []struct {
-		name    string
-		args    args
-		want    request.Result
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := linkRequest(tt.args.ctx, tt.args.requester, tt.args.processor, tt.args.r)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("linkRequest() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("linkRequest() got = %v, want %v", got, tt.want)
-			}
-		})
-	}
+func ExampleLinkRequest() {
+	name := "common:resiliency:agent/rate-limiting/request/http"
+
+	r, err := linkRequest(nil, nil, nil)
+	fmt.Printf("test: linkRequest() -> [result:%v] [err:%v]\n", r, err)
+
+	m := std.NewSyncMap[string, any]()
+	requester := requesttest.NewRequester(m)
+	values := make(url.Values)
+	values.Add(nameName, name)
+	values.Add(authorName, "bobs uncle")
+	values.Add(thing1Name, "common:core:agent/thing1")
+	values.Add(thing2Name, "common:core:agent/thing2")
+
+	r, err = linkRequest(nil, requester, values)
+	fmt.Printf("test: linkRequest() -> [result:%v] [err:%v]\n", r, err)
+
+	t, ok := m.Load(name)
+	fmt.Printf("test: Load() -> [%v] [ok:%v]\n", t, ok)
+
+	//Output:
+	//test: linkRequest() -> [result:{ 0 false false false false}] [err:query values are nil]
+	//test: linkRequest() -> [result:{ 1 true false false false}] [err:<nil>]
+	//test: Load() -> [[common:resiliency:agent/rate-limiting/request/http common:core:agent/thing1 common:core:agent/thing2 bobs uncle common resiliency agent /rate-limiting/request/http]] [ok:true]
+	
 }

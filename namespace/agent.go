@@ -122,7 +122,7 @@ func (a *agentT) Link(next rest.Exchange) rest.Exchange {
 		case requestThingPath:
 			_, err = thingRequest(ctx, a.requester, req.URL.Query())
 		case requestLinkPath:
-			_, err = linkRequest(ctx, a.requester, a.processor, req)
+			_, err = linkRequest(ctx, a.requester, req.URL.Query())
 		default:
 			return httpx.NewResponse(http.StatusBadRequest, nil, nil), errors.New(fmt.Sprintf("path is invalid [%v]", req.URL.Path))
 		}
