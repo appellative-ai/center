@@ -8,6 +8,7 @@ import (
 )
 
 // Note: args 1 - 7 are the same as a thing, with args 8 and 9 are the thing1 and thing2
+//       So a link is just a thing with the 2 additional thing links
 
 const (
 	requestLinkSql = "CALL dbo.InsertLink($1,$2,$3,$4,$5,$6,$7,$8,$9)"
