@@ -34,7 +34,7 @@ func ExampleCreateLinkArgs() {
 	//test: createLinkArgs() -> [name:] [args:[]] [err:author is empty]
 	//test: createLinkArgs() -> [name:] [args:[]] [err:thing1 is empty]
 	//test: createLinkArgs() -> [name:] [args:[]] [err:thing2 is empty]
-	//test: createLinkArgs() -> [name:common:resiliency:agent/rate-limiting/request/http] [args:[common:resiliency:agent/rate-limiting/request/http common:core:agent/thing1 common:core:agent/thing2 bobs uncle common resiliency agent /rate-limiting/request/http]] [err:<nil>]
+	//test: createLinkArgs() -> [name:common:resiliency:agent/rate-limiting/request/http] [args:[common:resiliency:agent/rate-limiting/request/http bobs uncle common resiliency agent /rate-limiting/request/http common:core:agent/thing1 common:core:agent/thing2]] [err:<nil>]
 
 }
 
