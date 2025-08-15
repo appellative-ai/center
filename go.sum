@@ -1,5 +1,7 @@
 github.com/appellative-ai/core v0.0.0-20250807112339-6f7f35d978be h1:fvr/vIyGGb1B6Q6DLp/psqVXea/mYGG0PDTZuAkbWaM=
 github.com/appellative-ai/core v0.0.0-20250807112339-6f7f35d978be/go.mod h1:a8kfuZMJHcdtdksSK+aYw2Mp6lT+i25oQEB+UCqwyhs=
+github.com/appellative-ai/core v0.0.0-20250815122620-d6c9ef48503c h1:PXOO8rVhSLAd2I017+A50HSZL51FxhCqr45txuJhjJg=
+github.com/appellative-ai/core v0.0.0-20250815122620-d6c9ef48503c/go.mod h1:a8kfuZMJHcdtdksSK+aYw2Mp6lT+i25oQEB+UCqwyhs=
 github.com/appellative-ai/postgres v0.0.0-20250807120028-10c18c650a28 h1:f0CCYBtP+Hmu/hbeu2P2bGd81r4R/R1jgTyq0GGQ3zU=
 github.com/appellative-ai/postgres v0.0.0-20250807120028-10c18c650a28/go.mod h1:bX7/hU44VLnMQ47C3BV2K8SgcUKKTjTrXopp8JN54kw=
 github.com/appellative-ai/postgres v0.0.0-20250808144929-15105a5f4a20 h1:RPF3OK2uIBa9Yq1oc+zH3AQ9szA+7m/DIsed7M9ur5I=
