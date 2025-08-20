@@ -3,7 +3,6 @@ package operations
 import (
 	"fmt"
 	"github.com/appellative-ai/core/messaging"
-	"github.com/appellative-ai/core/std"
 	"time"
 )
 
@@ -23,19 +22,16 @@ type agentT struct {
 }
 
 func init() {
-	//exchange.RegisterConstructor(NamespaceName, func() messaging.Agent {
-	//	return newAgent()
-	//})
+	newAgent()
 }
 
 func newAgent() *agentT {
 	a := new(agentT)
-
 	agent = a
 
 	a.ticker = messaging.NewTicker(messaging.ChannelEmissary, duration)
 	a.emissary = messaging.NewEmissaryChannel()
-	a.configureAgents()
+
 	return a
 }
 
@@ -92,72 +88,5 @@ func (a *agentT) message(m *messaging.Message) {
 	if m == nil {
 		return
 	}
-	recipients := m.To()
-	if len(recipients) == 0 {
-		status, _, _ := messaging.StatusContent(m)
-		if status != nil {
-			fmt.Printf("%v\n", status)
-		} else {
-			fmt.Printf("%v\n", m)
-		}
-		return
-	}
 
-	var local []string
-	var nonLocal []string
-	for _, to := range recipients {
-		if std.Origin.IsLocalCollective(to) {
-			local = append(local, to)
-		} else {
-			nonLocal = append(nonLocal, to)
-		}
-	}
-	if len(local) > 0 {
-		m.DeleteTo()
-		m.AddTo(local...)
-		//exchange.Message(m)
-	}
-	// TODO : non-local
-}
-
-func (a *agentT) advise(m *messaging.Message) {
-}
-
-func (a *agentT) subscribe(m *messaging.Message) {
-}
-
-func (a *agentT) cancel(m *messaging.Message) {
-}
-
-func (a *agentT) trace(name, task, observation, action string) {
-}
-
-func (a *agentT) configure(m *messaging.Message) {
-	switch m.ContentType() {
-	case messaging.ContentTypeMap:
-		//cfg, status := messaging.MapContent(m)
-		//if !status.OK() {
-		//	messaging.Reply(m, messaging.EmptyMapError(a.Name()), a.Name())
-		//	return
-		//}
-		//a.state = initialize(cfg)
-		// Initialize linked collectives
-		if std.Origin.Collective != "" {
-			// TODO: Initialize linked collectives by reading the configured collective links and then reference the
-			//       registry for collective host names
-		}
-	}
-	messaging.Reply(m, std.StatusOK, a.Name())
-}
-
-func (a *agentT) configureAgents() {
-	/*
-		a.agents.Broadcast(private.NewInterfaceMessage(&private.Interface{
-			Representation: representation,
-			Context:        context,
-			Thing:          thing,
-			Relation:       relation,
-		}))
-
-	*/
 }

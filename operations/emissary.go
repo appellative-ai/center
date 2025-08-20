@@ -12,7 +12,7 @@ func emissaryAttend(a *agentT) {
 	for {
 		select {
 		case <-a.ticker.T.C:
-			// TODO: query collective for new messages and advice
+			// TODO: check postgres diagnostics
 		default:
 		}
 		select {

@@ -1,8 +1,8 @@
 package logger
 
 import (
+	"github.com/appellative-ai/agency/logger/logx"
 	"github.com/appellative-ai/center/exchange"
-	"github.com/appellative-ai/core/logx"
 	"github.com/appellative-ai/core/messaging"
 	"github.com/appellative-ai/core/rest"
 	"github.com/appellative-ai/core/std"
