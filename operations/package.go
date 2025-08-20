@@ -6,6 +6,9 @@ import (
 	"time"
 )
 
+// TODO: need a private message queue for internal messaging.
+//       Maybe a control channel
+
 func ConfigClient(cfg map[string]string) error {
 	return sqlops.ConfigClient(cfg)
 }
