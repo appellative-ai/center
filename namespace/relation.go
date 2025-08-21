@@ -18,12 +18,11 @@ type tagRelation struct {
 	Args []arg  `json:"args"`
 }
 
-func relationRequest(ctx context.Context, retriever *retrieval.Interface, processor template.Agent, r *http.Request) (bytes.Buffer, error) {
-	var buf bytes.Buffer
+func relationRequest(ctx context.Context, retriever *retrieval.Interface, processor template.Agent, r *http.Request) (*bytes.Buffer, error) {
 	name := ""
 	res, err := processor.Build(name, nil)
 	if err != nil {
-		return buf, err
+		return nil, err
 	}
 	return retriever.Marshal(ctx, name, res.Sql, res.Args)
 }

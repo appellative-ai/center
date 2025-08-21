@@ -112,7 +112,7 @@ func (a *agentT) Link(next rest.Exchange) rest.Exchange {
 	return func(req *http.Request) (resp *http.Response, err error) {
 		ctx, cancel := httpx.NewContext(nil, a.timeout)
 		defer cancel()
-		var buf bytes.Buffer
+		var buf *bytes.Buffer
 
 		switch req.URL.Path {
 		case retrievalPath:

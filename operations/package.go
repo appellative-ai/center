@@ -9,12 +9,16 @@ import (
 // TODO: need a private message queue for internal messaging.
 //       Maybe a control channel
 
-func ConfigClient(cfg map[string]string) error {
+func ConfigDatabaseClient(cfg map[string]string) error {
 	return sqlops.ConfigClient(cfg)
 }
 
-func ConfigLogging(log func(start time.Time, duration time.Duration, route string, req any, resp any, timeout time.Duration)) {
+func ConfigDatabaseLogging(log func(start time.Time, duration time.Duration, route string, req any, resp any, timeout time.Duration)) {
 	sqlops.ConfigLogging(log)
+}
+
+func ConfigDatabaseSource() {
+	sqlops.ConfigSourceOverride()
 }
 
 func Startup(msg *messaging.Message) {
