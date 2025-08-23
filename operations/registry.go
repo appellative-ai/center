@@ -8,8 +8,8 @@ type Link struct {
 
 // Really just a slice of maps
 const (
-	CollectiveName = "collective"
-	Host1Name      = "host1"
-	Host2Name      = "host2"
+	CollectiveName   = "collective"
+	PrimaryHost1Name = "host1"
+	Host2Name        = "host2"
 	//RegistryAuthorization
 )
